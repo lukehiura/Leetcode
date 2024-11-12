@@ -42,5 +42,36 @@
 # - Sort the clusters by cost, prioritizing smaller clusters to maximize the number of repairs within the budget.
 # - Accumulate repairs until the total cost reaches or exceeds the budget, then return the maximum potholes repaired.
 
+# first, we are given a string of x.x.xxx...x 
+# First criteria, loop through to see if there's any x if not return 0
+# greedy approach, first let's look at the road
+# we need the longest cosnecutive potholes,
+# try to count the longest consecutive pothole
+
 def maxPotholes(road: str, budget: int) -> int:
-    pass
+
+    potholes = []
+    count = 0
+    for i in road:
+        if i == "x":
+            count += 1
+        else:
+            if count > 0:
+                potholes.append(count)
+                count = 0
+    potholes.sort(reverse=True)
+    num_potholes = 0
+    for blocksize in potholes:
+        repair_cost = blocksize + 1
+        if repair_cost <= budget:
+            budget -= repair_cost
+            num_potholes += repair_cost
+        else:
+            repairable_potholes = min(blocksize, budget - 1)
+            if repairable_potholes <= 0:
+                break
+            num_potholes += repairable_potholes
+            budget -= (repairable_potholes + 1)
+            break
+    return num_potholes
+
