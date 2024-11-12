@@ -49,29 +49,31 @@
 # try to count the longest consecutive pothole
 
 def maxPotholes(road: str, budget: int) -> int:
-
     potholes = []
-    count = 0
-    for i in road:
-        if i == "x":
-            count += 1
+    count = 0 
+
+    for char in road:
+        if char == "x":
+            count += 1 
         else:
             if count > 0:
                 potholes.append(count)
                 count = 0
+    
+    if count > 0:
+        potholes.append(count)
+        count = 0
     potholes.sort(reverse=True)
-    num_potholes = 0
-    for blocksize in potholes:
-        repair_cost = blocksize + 1
-        if repair_cost <= budget:
-            budget -= repair_cost
-            num_potholes += repair_cost
+    roads_built = 0
+    for groups in potholes:
+        cost = groups + 1
+        if cost <= budget:
+            roads_built += groups
+            budget -= cost
         else:
-            repairable_potholes = min(blocksize, budget - 1)
-            if repairable_potholes <= 0:
+            remainder = min(groups, budget - 1)
+            if remainder <= 0:
                 break
-            num_potholes += repairable_potholes
-            budget -= (repairable_potholes + 1)
+            roads_built += remainder
+            budget -= (remainder + 1)
             break
-    return num_potholes
-
