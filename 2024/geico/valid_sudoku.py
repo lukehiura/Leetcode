@@ -47,11 +47,77 @@
 # - board[i].length == 9
 # - board[i][j] is either a digit ('1'-'9') or '.'.
 #
-# Approach:
-# - Check each row, column, and 3x3 sub-box to ensure that they contain no repeated digits.
-# - Use a set to track digits for each row, column, and box, resetting the set after each row, column, or sub-box.
-# - Return True if all checks pass; otherwise, return False.
+# approach:
+# we need check each row to make sure that there are no duplicates. it must have a unique number
+# We need to check for each column to make sure that there are no duplicates it must have a unique numner
+# separate out into a 3x3 box, and make sure that everythign there has no duplicates
 
+# What do we consider valid? 
+# No duplicates.
 
 def isValidSudoku(board: list[list[str]]) -> bool:
-    pass
+    def is_valid(nums: list[str]) -> bool:
+        seen = set()
+        for num in nums:
+            if num != ".":
+                if num in seen:
+                    return False
+                else:
+                    seen.add(num)
+        return True
+    
+
+    for row in range(9):
+        if not is_valid(board[row]):
+            return False
+    
+    for col in range(9):
+        val = []
+        for row in range(9):
+            val.append(board[row][col])
+        if not is_valid(val):
+            return False
+
+    for row_box in range(0, 9, 3):
+        for col_box in range(0, 9, 3):
+            val = []
+            for row in range(row_box, row_box + 3):
+                for col in range(col_box, col_box + 3):
+                    val.append(board[row][col])
+            if not is_valid(val):
+                return False
+    return True
+
+
+board1 = [
+    ["5", "3", ".", ".", "7", ".", ".", ".", "."],
+    ["6", ".", ".", "1", "9", "5", ".", ".", "."],
+    [".", "9", "8", ".", ".", ".", ".", "6", "."],
+    ["8", ".", ".", ".", "6", ".", ".", ".", "3"],
+    ["4", ".", ".", "8", ".", "5", ".", ".", "1"],
+    ["7", ".", ".", ".", "2", ".", ".", ".", "6"],
+    [".", "6", ".", ".", ".", ".", "2", "8", "."],
+    [".", ".", ".", "4", "1", "9", ".", ".", "5"],
+    [".", ".", ".", ".", "8", ".", ".", "7", "9"]
+]
+
+board2 = [
+    ["8", "3", ".", ".", "7", ".", ".", ".", "."],
+    ["6", ".", ".", "1", "9", "5", ".", ".", "."],
+    [".", "9", "8", ".", ".", ".", ".", "6", "."],
+    ["8", ".", ".", ".", "6", ".", ".", ".", "3"],
+    ["4", ".", ".", "8", ".", "3", ".", ".", "1"],
+    ["7", ".", ".", ".", "2", ".", ".", ".", "6"],
+    [".", "6", ".", ".", ".", ".", "2", "8", "."],
+    [".", ".", ".", "4", "1", "9", ".", ".", "5"],
+    [".", ".", ".", ".", "8", ".", ".", "7", "9"]
+]
+
+print(isValidSudoku(board1))  # Output: True
+print(isValidSudoku(board2))  # Output: False
+
+
+
+    
+
+
